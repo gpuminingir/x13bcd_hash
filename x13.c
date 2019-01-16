@@ -4,23 +4,23 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "sha3/sph_blake.h"
-#include "sha3/sph_bmw.h"
-#include "sha3/sph_groestl.h"
-#include "sha3/sph_jh.h"
-#include "sha3/sph_keccak.h"
-#include "sha3/sph_skein.h"
-#include "sha3/sph_luffa.h"
-#include "sha3/sph_cubehash.h"
-#include "sha3/sph_shavite.h"
-#include "sha3/sph_simd.h"
-#include "sha3/sph_echo.h"
-#include "sha3/sph_hamsi.h"
-#include "sha3/sph_fugue.h"
-#include "sha3/sph_sm3.h"
+#include "../sha3/sph_blake.h"
+#include "../sha3/sph_bmw.h"
+#include "../sha3/sph_groestl.h"
+#include "../sha3/sph_jh.h"
+#include "../sha3/sph_keccak.h"
+#include "../sha3/sph_skein.h"
+#include "../sha3/sph_luffa.h"
+#include "../sha3/sph_cubehash.h"
+#include "../sha3/sph_shavite.h"
+#include "../sha3/sph_simd.h"
+#include "../sha3/sph_echo.h"
+#include "../sha3/sph_hamsi.h"
+#include "../sha3/sph_fugue.h"
+#include "./sm3.h"
 
 
-void x13bcd_hash(const char* input, char* output)
+void x13bcd_hash(const char* input, char* output, uint32_t len)
 {
     sph_blake512_context     ctx_blake;
     sph_bmw512_context       ctx_bmw;
@@ -66,8 +66,8 @@ void x13bcd_hash(const char* input, char* output)
 
 	memset(hashA, 0, 64);
     sm3_init(&ctx_sm3);
-    sph_sm3(&ctx_sm3, hashB, 64);
-    sph_sm3_close(&ctx_sm3, hashA);
+    sm3(&ctx_sm3, hashB, 64);
+    sm3_close(&ctx_sm3, hashA);
 	
     sph_cubehash512_init (&ctx_cubehash1); 
     sph_cubehash512 (&ctx_cubehash1, hashA, 64);   
